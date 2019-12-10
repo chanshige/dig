@@ -15,7 +15,7 @@ class ProcessTest extends CommonTestCase
 
     protected function setUp()
     {
-        $this->process = (new Process())(['/usr/bin/which', 'php']);
+        $this->process = (new Process())(['/usr/bin/which', 'ls']);
     }
 
     public function testRun()
@@ -24,7 +24,7 @@ class ProcessTest extends CommonTestCase
         $this->assertTrue($this->process->isSuccessful());
         $this->assertEquals(0, $this->process->getExitCode());
         $this->assertEquals('OK', $this->process->getExitCodeText());
-        $this->assertEquals('/usr/local/bin/php' . "\n", $this->process->getOutput());
+        $this->assertEquals('/bin/ls' . "\n", $this->process->getOutput());
     }
 
     /**
