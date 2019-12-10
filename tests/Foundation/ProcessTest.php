@@ -42,6 +42,6 @@ class ProcessTest extends CommonTestCase
 
     public function testGetCommandLine()
     {
-        $this->assertEquals('\'/usr/bin/which\' \'php\'', $this->process->getCommandLine());
+        $this->assertEquals('\'/usr/bin/which\' \'ls\'', $this->process->getCommandLine());
     }
 }
