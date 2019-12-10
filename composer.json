@@ -1,0 +1,45 @@
+{
+  "name": "chanshige/dig",
+  "description": "'chanshige/dig' is that helps registered domain name servers and zone of authority record dig lookup.",
+  "keywords": [
+    "dig",
+    "domain",
+    "dns"
+  ],
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Shigeki Tanaka",
+      "email": "dev@shigeki.tokyo"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Chanshige\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Chanshige\\": "tests/"
+    }
+  },
+  "require": {
+    "php": ">=7.1",
+    "symfony/process": "^5.0",
+    "ext-intl": "*",
+    "ext-json": "*"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "*",
+    "phpmd/phpmd": "*",
+    "phpunit/phpunit": "^7.0"
+  },
+  "scripts": {
+    "test": [
+      "phpmd src text ./phpmd.xml",
+      "phpcs src",
+      "phpunit"
+    ]
+  }
+}
