@@ -8,6 +8,8 @@ namespace Chanshige;
 interface DigInterface
 {
     /**
+     * Dig execute.
+     *
      * @param string      $domain       [required] domain name
      * @param string|null $qType        [optional] query type
      * @param string|null $globalServer [optional] global server

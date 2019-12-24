@@ -29,16 +29,10 @@ final class Dig implements DigInterface
     }
 
     /**
-     * @param string $domain
-     * @param string $qType
-     * @param string $globalServer
-     * @return array
+     * {@inheritDoc}
      */
-    public function __invoke(
-        string $domain,
-        ?string $qType = null,
-        ?string $globalServer = null
-    ): array {
+    public function __invoke(string $domain, ?string $qType = null, ?string $globalServer = null): array
+    {
         $command = (new Command())->domain($domain);
         if (!is_null($qType)) {
             $command->qType($qType);
