@@ -3,7 +3,8 @@
 [![Coverage Status](https://coveralls.io/repos/github/chanshige/dig/badge.svg?branch=master)](https://coveralls.io/github/chanshige/dig?branch=master)
 
 # chanshige/dig
-DNSレコード情報を調べることができます (intl extension is required.)
+DNSレコード情報を調べることができます  
+※BINDのdnsutil(dig command)がインストールされている環境で実行できます。
 
 ## Installation
 With Composer

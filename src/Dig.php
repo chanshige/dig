@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Chanshige;
 
+use Chanshige\Foundation\Command;
 use Chanshige\Foundation\Exception\ExecutionException;
 use Chanshige\Foundation\Process;
 use Chanshige\Foundation\ProcessInterface;
-use Generator;
 
 /**
  * Class Dig
@@ -15,9 +15,6 @@ use Generator;
  */
 final class Dig implements DigInterface
 {
-    /** @var string */
-    private const GOOGLE_PUBLIC_DNS = '8.8.8.8';
-
     /** @var ProcessInterface */
     private $process;
 
@@ -28,7 +25,7 @@ final class Dig implements DigInterface
      */
     public function __construct(ProcessInterface $process = null)
     {
-        $this->process = $process ?? new Process;
+        $this->process = $process ?? new Process();
     }
 
     /**
@@ -37,54 +34,48 @@ final class Dig implements DigInterface
      * @param string $globalServer
      * @return array
      */
-    public function __invoke(string $domain, string $qType = 'any', string $globalServer = self::GOOGLE_PUBLIC_DNS): array
-    {
-        $dig = ($this->process)($this->buildCommand($domain, $qType, $globalServer));
-        $dig->run();
-
-        if (!$dig->isSuccessful()) {
-            throw new ExecutionException($dig->getExitCodeText());
+    public function __invoke(
+        string $domain,
+        ?string $qType = null,
+        ?string $globalServer = null
+    ): array {
+        $command = (new Command())->domain($domain);
+        if (!is_null($qType)) {
+            $command->qType($qType);
         }
 
-        return iterator_to_array($this->convert($dig->getOutput()));
+        if (!is_null($globalServer)) {
+            $command->globalServer($globalServer);
+        }
+
+        $process = $this->process->command($command->toArray());
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            throw new ExecutionException($process->getExitCodeText());
+        }
+
+        return $this->convert(explode("\n", $process->getOutput()));
     }
 
     /**
-     * @param string $domain
-     * @param string $qType
-     * @param string $globalServer
+     * @param array $data
      * @return array
      */
-    private function buildCommand(string $domain, string $qType, string $globalServer): array
+    private function convert(array $data): array
     {
-        return [
-            '/usr/bin/dig',
-            '@' . $globalServer,
-            $domain,
-            $qType,
-            '+noall',
-            '+nocmd',
-            '+ans',
-            '+additional',
-            '+authority',
-            '+time=1'
-        ];
-    }
-
-    /**
-     * @param string $data
-     * @return Generator
-     */
-    private function convert(string $data): Generator
-    {
-        foreach ((array)explode("\n", trim($data)) as $key => $value) {
-            // <<>> DiG..
-            if ($key <= 2 || strlen($value) === 0) {
+        $row = [];
+        foreach ($data as $value) {
+            if (strlen($value) === 0) {
                 continue;
             }
+            $value = str_replace(["\t"], ' ', $value);
+            $value = str_replace(['"'], '', $value);
 
-            yield trim(str_replace(["\t", '"'], ' ', $value));
+            $row[] = $value;
         }
+
+        return $row;
     }
 
     /**

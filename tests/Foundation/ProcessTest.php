@@ -11,11 +11,12 @@ use Chanshige\CommonTestCase;
  */
 class ProcessTest extends CommonTestCase
 {
+    /** @var ProcessInterface */
     private $process;
 
     protected function setUp()
     {
-        $this->process = (new Process())(['/usr/bin/which', 'ls']);
+        $this->process = (new Process())->command(['/usr/bin/which', 'ls']);
     }
 
     public function testRun()
