@@ -21,7 +21,7 @@ class Process implements ProcessInterface
     /**
      * {@inheritDoc}
      */
-    public function __invoke(array $command): ProcessInterface
+    public function command(array $command): ProcessInterface
     {
         $this->process = new SymfonyProcess($command);
 

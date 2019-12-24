@@ -18,7 +18,7 @@ interface ProcessInterface
      * @param array $command The command to run and its arguments listed as separate entries
      * @return ProcessInterface
      */
-    public function __invoke(array $command): ProcessInterface;
+    public function command(array $command): ProcessInterface;
 
     /**
      * Runs the process.

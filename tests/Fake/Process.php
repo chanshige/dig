@@ -24,7 +24,7 @@ class Process implements ProcessInterface
         $this->forceFailed = $forceFailed;
     }
 
-    public function __invoke(array $command): ProcessInterface
+    public function command(array $command): ProcessInterface
     {
         $this->commandLine = $command;
 
@@ -70,9 +70,11 @@ class Process implements ProcessInterface
     public static function fakeResult()
     {
         return <<< EOF
-; <<>> DiG 9.11-Debian <<>> @8.8.8.8 domain.example any +noall +nocmd +ans +additional +authority +time=1
+
+; <<>> DiG 9.11-Debian <<>> @8.8.8.8 domain.example any +noall +nocmd +ans +additional +authority +timeout=1
 ; (1 server found)
 ;; global options: +cmd
+
 domain.example.          3600   IN      SOA     01.nameserver.example. hostmaster.nameserver.example. 1549943072 3600 900 604800 300
 domain.example.          3600   IN      NS      01.nameserver.example.
 domain.example.          3600   IN      NS      02.nameserver.example.
@@ -81,6 +83,7 @@ domain.example.          3600   IN      NS      04.nameserver.example.
 domain.example.          60     IN      A       127.0.0.1
 domain.example.          60     IN      MX      10 mail.example.
 domain.example.          60     IN      TXT     "v=spf1 include:_spf.domain.example. ~all"
+
 EOF;
     }
 }

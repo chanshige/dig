@@ -8,10 +8,12 @@ namespace Chanshige;
 interface DigInterface
 {
     /**
-     * @param string $domain
-     * @param string $qType
-     * @param string $globalServer
+     * Dig execute.
+     *
+     * @param string      $domain       [required] domain name
+     * @param string|null $qType        [optional] query type
+     * @param string|null $globalServer [optional] global server
      * @return array
      */
-    public function __invoke(string $domain, string $qType, string $globalServer): array;
+    public function __invoke(string $domain, ?string $qType = null, ?string $globalServer = null): array;
 }
