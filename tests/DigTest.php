@@ -2,18 +2,20 @@
 
 namespace Chanshige;
 
+use Chanshige\Exception\DigExecutionException;
 use Chanshige\Fake\Process;
+use Traversable;
 
-/**
- * Class DigTest
- *
- * @package  Chanshige
- */
 class DigTest extends CommonTestCase
 {
+    public function testFactory()
+    {
+        $this->assertInstanceOf(Dig::class, (new DigFactory())->newInstance());
+    }
+
     public function testExecute()
     {
-        $dig = new Dig(new Process);
+        $dig = new Dig(new Process());
         $result = $dig('domain.example', 'aaaa', '1.1.1.1');
         $expected = [
             '; <<>> DiG 9.11-Debian <<>> @8.8.8.8 domain.example any +noall +nocmd +ans +additional +authority +timeout=1',
@@ -33,15 +35,16 @@ class DigTest extends CommonTestCase
             '/usr/bin/dig @1.1.1.1 domain.example aaaa +noall +nocmd +ans +additional +authority +timeout=1',
             (string)$dig
         );
-        $this->assertEquals($expected, $result);
+
+        $this->assertInstanceOf(Traversable::class, $result);
+        $this->assertEquals($expected, iterator_to_array($result));
     }
 
-    /**
-     * @expectedException Chanshige\Foundation\Exception\ExecutionException
-     * @expectedExceptionMessage exit code text.
-     */
     public function testFailedSuccess()
     {
+        $this->expectException(DigExecutionException::class);
+        $this->expectExceptionMessage('exit code text.');
+
         $dig = new Dig(new Process(true));
         $dig('domain.example', 'aaaa', '1.1.1.1');
     }

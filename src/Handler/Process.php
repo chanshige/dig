@@ -1,26 +1,25 @@
 <?php
-
+/*
+ * This file is part of the Chanshige\Dig package.
+ *
+ * (c) shigeki tanaka <dev@shigeki.tokyo>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 declare(strict_types=1);
 
-namespace Chanshige\Foundation;
+namespace Chanshige\Handler;
 
-use Chanshige\Foundation\Exception\ExecutionException;
+use Chanshige\Exception\DigExecutionException;
 use Symfony\Component\Process\Exception\ExceptionInterface;
 use Symfony\Component\Process\Process as SymfonyProcess;
 
-/**
- * Class Process
- *
- * @package Chanshige\Foundation
- */
 class Process implements ProcessInterface
 {
     /** @var SymfonyProcess */
     private $process;
 
-    /**
-     * {@inheritDoc}
-     */
     public function command(array $command): ProcessInterface
     {
         $this->process = new SymfonyProcess($command);
@@ -28,54 +27,41 @@ class Process implements ProcessInterface
         return $this;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function run(): int
     {
         return $this->process->run();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function isSuccessful(): bool
     {
         return $this->process->isSuccessful();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getOutput(): string
+    public function output(): string
     {
         try {
             return $this->process->getOutput();
         } catch (ExceptionInterface $e) {
-            throw new ExecutionException($e->getMessage(), $e->getCode());
+            throw new DigExecutionException($e->getMessage(), $e->getCode());
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getExitCodeText(): string
+    public function outputToArray(string $delimiter = "\n"): array
+    {
+        return explode($delimiter, $this->output());
+    }
+
+    public function exitCodeText(): string
     {
         return $this->process->getExitCodeText() ?? '';
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getExitCode(): int
+    public function exitCode(): ?int
     {
-        return $this->process->getExitCode() ?? ProcessInterface::NOT_TERMINATED_CODE;
+        return $this->process->getExitCode();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getCommandLine(): string
+    public function commandLine(): string
     {
         return $this->process->getCommandLine();
     }

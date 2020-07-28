@@ -1,29 +1,31 @@
 <?php
+/*
+ * This file is part of the Chanshige\Dig package.
+ *
+ * (c) shigeki tanaka <dev@shigeki.tokyo>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 declare(strict_types=1);
 
-namespace Chanshige\Foundation;
+namespace Chanshige;
 
-/**
- * Class Command
- *
- * @package Chanshige\Foundation
- */
 final class Command
 {
     /** @var string dig path */
-    private const PATH = '/usr/bin/dig';
+    private $path = '/usr/bin/dig';
 
     /** @var string request to dns server. [default:google public dns] */
     private $globalServer = '8.8.8.8';
 
     /** @var string is in the Domain Name System */
-    private $domain = '';
+    private $domain;
 
     /** @var string is one of (a,any,mx,ns,soa,hinfo,axfr,txt,...)[default:any] */
     private $qType = 'any';
 
     /**
-     * @param string $globalServer
      * @return $this
      */
     public function globalServer(string $globalServer)
@@ -34,7 +36,6 @@ final class Command
     }
 
     /**
-     * @param string $domain
      * @return $this
      */
     public function domain(string $domain)
@@ -45,12 +46,21 @@ final class Command
     }
 
     /**
-     * @param string $qType
      * @return $this
      */
     public function qType(string $qType)
     {
         $this->qType = $qType;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function path(string $path)
+    {
+        $this->path = $path;
 
         return $this;
     }
@@ -63,7 +73,7 @@ final class Command
     public function toArray(): array
     {
         return [
-            self::PATH,
+            $this->path,
             '@' . $this->globalServer,
             $this->domain,
             $this->qType,

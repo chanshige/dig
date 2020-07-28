@@ -2,7 +2,7 @@
 
 namespace Chanshige\Fake;
 
-use Chanshige\Foundation\ProcessInterface;
+use Chanshige\Handler\ProcessInterface;
 
 /**
  * Class Process
@@ -47,22 +47,27 @@ class Process implements ProcessInterface
         return $this->isRun;
     }
 
-    public function getExitCode(): int
+    public function exitCode(): ?int
     {
         return $this->code;
     }
 
-    public function getExitCodeText(): string
+    public function exitCodeText(): string
     {
         return 'exit code text.';
     }
 
-    public function getOutput(): string
+    public function output(): string
     {
         return self::fakeResult();
     }
 
-    public function getCommandLine(): string
+    public function outputToArray(string $delimiter = "\n"): array
+    {
+        return explode($delimiter, $this->output());
+    }
+
+    public function commandLine(): string
     {
         return implode(' ', $this->commandLine);
     }

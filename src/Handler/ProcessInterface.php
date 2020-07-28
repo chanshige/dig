@@ -1,21 +1,19 @@
 <?php
-
-namespace Chanshige\Foundation;
-
-/**
- * Interface ProcessInterface
+/*
+ * This file is part of the Chanshige\Dig package.
  *
- * @package Chanshige\Foundation
+ * (c) shigeki tanaka <dev@shigeki.tokyo>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
+namespace Chanshige\Handler;
+
 interface ProcessInterface
 {
-    /** @var int Process is not terminated */
-    public const NOT_TERMINATED_CODE = 9999;
-
     /**
      * Creates a Process instance as a command-line to be run in a shell wrapper.
      *
-     * @param array $command The command to run and its arguments listed as separate entries
      * @return ProcessInterface
      */
     public function command(array $command): ProcessInterface;
@@ -39,26 +37,33 @@ interface ProcessInterface
      *
      * @return string A string representation for the exit status code
      */
-    public function getExitCodeText(): string;
+    public function exitCodeText(): string;
 
     /**
      * Returns the exit code returned by the process.
      *
-     * @return int The exit status code
+     * @return int|null The exit status code
      */
-    public function getExitCode(): int;
+    public function exitCode(): ?int;
 
     /**
      * Returns the current output of the process (STDOUT).
      *
      * @return string The process output
      */
-    public function getOutput(): string;
+    public function output(): string;
+
+    /**
+     * Returns the current output array of the process (STDOUT).
+     *
+     * @return array The process output
+     */
+    public function outputToArray(string $delimiter = "\n"): array;
 
     /**
      * Gets the command line to be executed.
      *
      * @return string The command to execute
      */
-    public function getCommandLine(): string;
+    public function commandLine(): string;
 }
