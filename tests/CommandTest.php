@@ -1,14 +1,7 @@
 <?php
 
-namespace Chanshige\Foundation;
+namespace Chanshige;
 
-use Chanshige\CommonTestCase;
-
-/**
- * Class CommandTest
- *
- * @package Chanshige\Foundation
- */
 class CommandTest extends CommonTestCase
 {
     public function testCommand()

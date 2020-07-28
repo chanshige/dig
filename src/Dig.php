@@ -1,37 +1,32 @@
 <?php
+/*
+ * This file is part of the Chanshige\Dig package.
+ *
+ * (c) shigeki tanaka <dev@shigeki.tokyo>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 declare(strict_types=1);
 
 namespace Chanshige;
 
-use Chanshige\Foundation\Command;
-use Chanshige\Foundation\Exception\ExecutionException;
-use Chanshige\Foundation\Process;
-use Chanshige\Foundation\ProcessInterface;
+use Chanshige\Contracts\DigInterface;
+use Chanshige\Exception\DigExecutionException;
+use Chanshige\Handler\ProcessInterface;
+use Traversable;
 
-/**
- * Class Dig
- *
- * @package Chanshige
- */
 final class Dig implements DigInterface
 {
     /** @var ProcessInterface */
     private $process;
 
-    /**
-     * Dig constructor.
-     *
-     * @param ProcessInterface $process
-     */
-    public function __construct(ProcessInterface $process = null)
+    public function __construct(ProcessInterface $process)
     {
-        $this->process = $process ?? new Process();
+        $this->process = $process;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function __invoke(string $domain, ?string $qType = null, ?string $globalServer = null): array
+    public function __invoke(string $domain, ?string $qType = null, ?string $globalServer = null): Traversable
     {
         $command = (new Command())->domain($domain);
         if (!is_null($qType)) {
@@ -46,19 +41,14 @@ final class Dig implements DigInterface
         $process->run();
 
         if (!$process->isSuccessful()) {
-            throw new ExecutionException($process->getExitCodeText());
+            throw new DigExecutionException($process->exitCodeText(), $process->exitCode());
         }
 
-        return $this->convert(explode("\n", $process->getOutput()));
+        return $this->convert($process->outputToArray());
     }
 
-    /**
-     * @param array $data
-     * @return array
-     */
-    private function convert(array $data): array
+    private function convert(array $data): Traversable
     {
-        $row = [];
         foreach ($data as $value) {
             if (strlen($value) === 0) {
                 continue;
@@ -66,10 +56,8 @@ final class Dig implements DigInterface
             $value = str_replace(["\t"], ' ', $value);
             $value = str_replace(['"'], '', $value);
 
-            $row[] = $value;
+            yield $value;
         }
-
-        return $row;
     }
 
     /**
@@ -77,6 +65,6 @@ final class Dig implements DigInterface
      */
     public function __toString(): string
     {
-        return $this->process->getCommandLine();
+        return $this->process->commandLine();
     }
 }

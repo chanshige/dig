@@ -9,18 +9,24 @@ DNSレコード情報を調べることができます
 ## Installation
 With Composer
 ```
-$ composer require chanshige/dig 'v1.0'
+$ composer require chanshige/dig 'v2.0'
 ```
 
 ## usage
 ```php
 <?php
-use Chanshige\Dig;
+use Chanshige\DigFactory;
 
-$dig = new Dig();
+$dig = (new DigFactory())->newInstance();
+
+# Traversable
 $result = $dig('shigeki.tokyo', 'any', '8.8.8.8');
 
-var_dump($result);
+# toArray
+var_dump(iterator_to_array($result));
+
+# show command line
+echo $dig;
 ```
 
 ## test
