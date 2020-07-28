@@ -1,4 +1,4 @@
-[![Packagist](https://img.shields.io/badge/packagist-v1.0.0-blue.svg)](https://packagist.org/packages/chanshige/dig)
+[![Packagist](https://img.shields.io/badge/packagist-v2.0.0-blue.svg)](https://packagist.org/packages/chanshige/dig)
 [![Build Status](https://travis-ci.org/chanshige/dig.svg?branch=master)](https://travis-ci.org/chanshige/dig)
 [![Coverage Status](https://coveralls.io/repos/github/chanshige/dig/badge.svg?branch=master)](https://coveralls.io/github/chanshige/dig?branch=master)
 
@@ -29,12 +29,8 @@ var_dump(iterator_to_array($result));
 echo $dig;
 ```
 
-## test
+## test (with output coverage reports)
 `$ composer test`  
-
-
-## coverage
-![coverage](https://i.gyazo.com/1b6a7d56dbc7f62ed6e2fc2055c18582.png)
 
 ## License
 MIT
